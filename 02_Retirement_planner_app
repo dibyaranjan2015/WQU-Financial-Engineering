@@ -1,0 +1,99 @@
+import tkinter as tk
+from tkinter import messagebox
+
+# ==========================================
+# 1. THE BACKEND (Your Core Math Logic)
+# ==========================================
+class FinancialPlanner:
+    def __init__(self, return_rate: float):
+        self.return_rate = return_rate
+
+    def _get_accumulation_factor(self, years: int) -> float:
+        # Avoid division by zero if return rate is 0
+        if self.return_rate == 0:
+            return years
+        return (1 + self.return_rate) * (((1 + self.return_rate) ** years - 1) / self.return_rate)
+
+    def calculate_income_drawdown(self, annual_drawdown: float, drawdown_years: int, accumulation_years: int) -> float:
+        if self.return_rate == 0:
+            pv_at_retirement = annual_drawdown * drawdown_years
+        else:
+            pv_at_retirement = annual_drawdown * (1 - (1 + self.return_rate) ** -drawdown_years) / self.return_rate
+        
+        annuity_factor = self._get_accumulation_factor(accumulation_years)
+        return pv_at_retirement / annuity_factor
+
+
+# ==========================================
+# 2. THE FRONTEND (The Desktop Window)
+# ==========================================
+class DesktopApp:
+    def __init__(self, window):
+        self.window = window
+        self.window.title("WQU Financial Planner")
+        self.window.geometry("450x350")
+        self.window.config(padx=20, pady=20)
+
+        # ---- Create the Visual Elements (Widgets) ----
+        
+        # 1. Return Rate Row
+        tk.Label(window, text="Expected Annual Return (%) :", font=("Arial", 10)).grid(row=0, column=0, sticky="w", pady=5)
+        self.entry_return = tk.Entry(window, width=15)
+        self.entry_return.grid(row=0, column=1, pady=5)
+
+        # 2. Annual Drawdown Row
+        tk.Label(window, text="Desired Annual Payout ($) :", font=("Arial", 10)).grid(row=1, column=0, sticky="w", pady=5)
+        self.entry_drawdown = tk.Entry(window, width=15)
+        self.entry_drawdown.grid(row=1, column=1, pady=5)
+
+        # 3. Drawdown Years Row
+        tk.Label(window, text="Retirement Duration (Years) :", font=("Arial", 10)).grid(row=2, column=0, sticky="w", pady=5)
+        self.entry_drawdown_years = tk.Entry(window, width=15)
+        self.entry_drawdown_years.grid(row=2, column=1, pady=5)
+
+        # 4. Accumulation Years Row
+        tk.Label(window, text="Years Until Retirement :", font=("Arial", 10)).grid(row=3, column=0, sticky="w", pady=5)
+        self.entry_accum_years = tk.Entry(window, width=15)
+        self.entry_accum_years.grid(row=3, column=1, pady=5)
+
+        # 5. Calculate Button
+        self.btn_calculate = tk.Button(window, text="Calculate Required Savings", command=self.handle_calculation, bg="#4CAF50", fg="white", font=("Arial", 10, "bold"))
+        self.btn_calculate.grid(row=4, column=0, columnspan=2, pady=20)
+
+        # 6. Result Label
+        self.lbl_result = tk.Label(window, text="Required Annual Deposit: $0.00", font=("Arial", 12, "bold"), fg="#1976D2")
+        self.lbl_result.grid(row=5, column=0, columnspan=2, pady=10)
+
+    def handle_calculation(self):
+        """This function runs whenever the user clicks the button."""
+        try:
+            # Extract data out of the text entry boxes and convert them to math numbers
+            r_rate = float(self.entry_return.get()) / 100.0
+            drawdown = float(self.entry_drawdown.get())
+            drawdown_years = int(self.entry_drawdown_years.get())
+            accum_years = int(self.entry_accum_years.get())
+
+            # Instantiate our backend planner with the dynamic return rate
+            planner = FinancialPlanner(return_rate=r_rate)
+            
+            # Fire the calculation
+            required_deposit = planner.calculate_income_drawdown(drawdown, drawdown_years, accum_years)
+
+            # Dynamically update the visual label on the desktop screen
+            self.lbl_result.config(text=f"Required Annual Deposit: ${required_deposit:,.2f}")
+
+        except ValueError:
+            # If the user enters text where numbers should be, show an alert box instead of crashing
+            messagebox.showerror("Input Error", "Please enter valid numbers in all fields.")
+
+
+# ==========================================
+# 3. RUNNING THE APPLICATION
+# ==========================================
+if __name__ == "__main__":
+    # Create the root window engine for Tkinter
+    root = tk.Tk()
+    # Pass the window into our desktop app blueprint
+    app = DesktopApp(root)
+    # Start the application loop (keeps the window open and listening for clicks)
+    root.mainloop()
