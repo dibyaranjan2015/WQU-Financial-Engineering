@@ -65,8 +65,8 @@ class CollateralManager:
 
 st.set_page_config(page_title="Credit Risk Analytics", layout="wide")
 
-st.title("📊 Financial Risk & Fixed Income Analytics Platform")
-st.markdown("Interactive risk engineering dashboard")
+st.title("📊 Credit Risk Analytics Platform")
+st.markdown("Interactive Credit Risk engineering dashboard")
 st.divider()
 
 # Sidebar navigation menu
@@ -95,15 +95,19 @@ if module_choice == "1. Counterparty Credit Risk Engine":
         # Display results in a table
         result_df = pd.DataFrame([result])
         result_df.columns = ['Final Rate', 'Total Due', 'Probability of Default', 'Expected Loss', 'Expected Recovery']
-        result_df.style.format({
-            'Final Rate': '{:.2%}',
-            'Total Due': '${:,.2f}',
-            'Probability of Default': '{:.2%}',
-            'Expected Loss': '${:,.2f}',
-            'Expected Recovery': '${:,.2f}' 
-        })
+        styled_result_df = (
+            result_df.style.format({
+                'Final Rate': '{:.2%}',
+                'Total Due': '${:,.2f}',
+                'Probability of Default': '{:.2%}',
+                'Expected Loss': '${:,.2f}',
+                'Expected Recovery': '${:,.2f}'
+            })
+            .set_properties(**{'text-align': 'center'})
+            .set_table_styles([{'selector': 'th', 'props': [('text-align', 'center')]}])
+        )
         st.subheader("Credit Risk Evaluation Results")
-        st.dataframe(result_df, use_container_width=True, hide_index=True)
+        st.dataframe(styled_result_df, use_container_width=True, hide_index=True)
 
 if module_choice == "2. Collateral & LGD Simulator":
     st.header("2️⃣ Collateral Liquidation & Loss Given Default (LGD) Simulator")
@@ -120,5 +124,14 @@ if module_choice == "2. Collateral & LGD Simulator":
         # Display results in a table
         lgd_df = pd.DataFrame([lgd_result])
         lgd_df.columns = ['Liquidation Value', 'Recovered Amount', 'Net Credit Loss']
+        styled_lgd_df = (
+            lgd_df.style.format({
+                'Liquidation Value': '${:,.2f}',
+                'Recovered Amount': '${:,.2f}',
+                'Net Credit Loss': '${:,.2f}'
+            })
+            .set_properties(**{'text-align': 'center'})
+            .set_table_styles([{'selector': 'th', 'props': [('text-align', 'center')]}])
+        )
         st.subheader("Loss Given Default Simulation Results")
-        st.table(lgd_df)
+        st.dataframe(styled_lgd_df, use_container_width=True, hide_index=True)
