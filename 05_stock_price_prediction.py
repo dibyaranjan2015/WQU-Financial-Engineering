@@ -129,6 +129,6 @@ with col2:
                 st.pyplot(fig, use_container_width=True)
 
                 var_rupee = current_price - downside_5pct
-                st.warning(f"🛡️ **MSc Risk Management Insights:** Based on our calibrated matrix engine, there is a **5% risk probability** that market shocks could drop {ticker} below **₹{downside_5pct:,.2f}** within this time horizon, causing a localized loss asset stress of **₹{var_rupee:,.2f}** per unit share position.")
+                st.warning(f"🛡️ **Risk Management Insights:** Based on our calibrated matrix engine, there is a **5% risk probability** that market shocks could drop {ticker} below **₹{downside_5pct:,.2f}** within this time horizon, causing a localized loss asset stress of **₹{var_rupee:,.2f}** per unit share position.")
     else:
         st.info("Input a valid National Stock Exchange of India ticker symbol on the left sidebar profile and launch the execution pipeline.")
