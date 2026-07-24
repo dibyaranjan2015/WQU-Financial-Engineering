@@ -25,15 +25,47 @@ def load_data(t1, t2, start, end):
     returns = data.pct_change().dropna()
     return data, returns
 
+
+
 if st.sidebar.button("Run Analysis"):
+
+
+            
     try:
         data, returns = load_data(ticker1, ticker2, start_date, end_date)
+
+        # --- 1. Stock Price Trends ---
+        st.subheader("📈 Historical Price & Performance Trends")
+        
+        price_tab1, price_tab2 = st.tabs(["Normalized Returns (%)", "Raw Stock Prices ($)"])
+        
+        with price_tab1:
+            st.caption("Normalizes both assets to 0% starting point to compare relative performance side-by-side.")
+            normalized_prices = (data / data.iloc[0] - 1) * 100
+            
+            fig_norm = px.line(
+                normalized_prices,
+                labels={"value": "Cumulative Growth (%)", "Date": "Date", "variable": "Ticker"},
+                title=f"Cumulative Performance Comparison: {ticker1} vs {ticker2}"
+            )
+            st.plotly_chart(fig_norm, use_container_width=True)
+
+        with price_tab2:
+            st.caption("Raw daily adjusted closing prices in USD.")
+            fig_prices = px.line(
+                data,
+                labels={"value": "Price (USD)", "Date": "Date", "variable": "Ticker"},
+                title=f"Adjusted Close Prices: {ticker1} & {ticker2}"
+            )
+            st.plotly_chart(fig_prices, use_container_width=True)
+
         
         # --- 1. Compute Correlation Metrics ---
         pearson_corr = returns.corr(method='pearson').loc[ticker1, ticker2]
         spearman_corr = returns.corr(method='spearman').loc[ticker1, ticker2]
         kendall_corr = returns.corr(method='kendall').loc[ticker1, ticker2]
-        
+
+        st.subheader("Correlations Between Assets")
         # Display Metrics in Columns
         col1, col2, col3 = st.columns(3)
         col1.metric("Pearson Correlation (Linear)", f"{pearson_corr:.4f}")
