@@ -5,3 +5,6 @@ streamlit
 matplotlib
 datetime
 yfinance
+seaborn
+plotly
+statsmodels
