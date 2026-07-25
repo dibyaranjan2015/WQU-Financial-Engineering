@@ -9,13 +9,13 @@ from scipy import stats
 
 st.set_page_config(page_title="Asset Correlation Dashboard", layout="wide")
 
-st.title("📊 Asset Correlation Dashboard")
+st.title("Asset Correlation Dashboard")
 st.write("Calculate and visualize **Pearson**, **Spearman**, and **Kendall's $\\tau$** correlations between two assets based on historical returns.")
 
 # --- Sidebar Inputs ---
 st.sidebar.header("User Settings")
-ticker1 = st.sidebar.text_input("Asset 1 Ticker", "AAPL").upper()
-ticker2 = st.sidebar.text_input("Asset 2 Ticker", "MSFT").upper()
+ticker1 = st.sidebar.text_input("Asset 1 Ticker (As per Yahoo Finance)", "AAPL").upper()
+ticker2 = st.sidebar.text_input("Asset 2 Ticker (As per Yahoo Finance)", "MSFT").upper()
 start_date = st.sidebar.date_input("Start Date", pd.to_datetime("2023-01-01"))
 end_date = st.sidebar.date_input("End Date", pd.to_datetime("2024-01-01"))
 
@@ -35,7 +35,7 @@ if st.sidebar.button("Run Analysis"):
         data, returns = load_data(ticker1, ticker2, start_date, end_date)
 
         # --- 1. Stock Price Trends ---
-        st.subheader("📈 Historical Price & Performance Trends")
+        st.subheader("Historical Price & Performance Trends")
         
         price_tab1, price_tab2 = st.tabs(["Normalized Returns (%)", "Raw Stock Prices ($)"])
         
