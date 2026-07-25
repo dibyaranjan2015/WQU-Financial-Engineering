@@ -14,10 +14,10 @@ st.write("Calculate and visualize **Pearson**, **Spearman**, and **Kendall's $\\
 
 # --- Sidebar Inputs ---
 st.sidebar.header("User Settings")
-ticker1 = st.sidebar.text_input("Asset 1 Ticker (As per Yahoo Finance)", "AAPL").upper()
-ticker2 = st.sidebar.text_input("Asset 2 Ticker (As per Yahoo Finance)", "MSFT").upper()
-start_date = st.sidebar.date_input("Start Date", pd.to_datetime("2023-01-01"))
-end_date = st.sidebar.date_input("End Date", pd.to_datetime("2024-01-01"))
+ticker1 = st.sidebar.text_input("Asset 1 Ticker (As per Yahoo Finance)", "RELIANCE.NS").upper()
+ticker2 = st.sidebar.text_input("Asset 2 Ticker (As per Yahoo Finance)", "TVSMOTOR.NS").upper()
+start_date = st.sidebar.date_input("Start Date", pd.to_datetime("2025-01-01"))
+end_date = st.sidebar.date_input("End Date", pd.to_datetime("2026-01-01"))
 
 @st.cache_data
 def load_data(t1, t2, start, end):
