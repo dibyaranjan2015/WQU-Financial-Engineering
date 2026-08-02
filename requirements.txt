@@ -8,3 +8,4 @@ yfinance
 seaborn
 plotly
 statsmodels
+nbformat>=4.2.0
